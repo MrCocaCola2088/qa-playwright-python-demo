@@ -1,6 +1,7 @@
 from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
-
+import pytest
+@pytest.mark.ui
 def test_switch_between_tenants(page):
     login = LoginPage(page)
     dashboard = DashboardPage(page)
