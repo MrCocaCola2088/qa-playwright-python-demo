@@ -11,6 +11,9 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright/python:v1.45.0
 
+    env:
+      PYTHONPATH: .
+
     services:
       postgres:
         image: postgres:14
