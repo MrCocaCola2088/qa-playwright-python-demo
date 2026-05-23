@@ -10,7 +10,7 @@ def test_customer_not_accessible_from_other_tenant():
         status=201
     )
 
-    client = APIClient()
+    client = APIClient(token="fake-token")
     res = client.create_customer("tenant-a", {"name": "John"})
     
     assert res.status_code == 201

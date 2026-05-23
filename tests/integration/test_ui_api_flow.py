@@ -1,3 +1,6 @@
+import pytest
+
+pytestmark = pytest.mark.integration
 def test_create_customer_and_verify_ui(page):
     # Simulate creating customer via UI
     page.goto("https://example-crm.com/customers")
