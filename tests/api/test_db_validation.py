@@ -1,6 +1,6 @@
 from utils.api_client import APIClient
 from utils.db_client import DBClient
-
+@pytest.mark.skip(reason="Requires real DB")
 def test_customer_persisted_in_db():
     api = APIClient(token="fake_token")
     db = DBClient()
