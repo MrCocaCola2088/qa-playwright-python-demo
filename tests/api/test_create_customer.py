@@ -1,14 +1,16 @@
 from utils.api_client import APIClient
-from fixtures.test_data import get_customer_payload
 from unittest.mock import patch
 
-@patch("utils.api_client.APIClient.create_customer")
-def test_create_customer(mock_create):
-    mock_create.return_value = {
-        "id": 1,
+@patch("utils.api_client.requests.post")
+def test_create_customer(mock_post):
+    mock_post.return_value.status_code = 201
+    mock_post.return_value.json.return_value = {
+        "id": "123",
         "name": "Test User"
     }
 
-    response = mock_create()
+    client = APIClient()
+    response = client.create_customer("tenant-a", {"name": "Test User"})
 
-    assert response["name"] == "Test User"
+    assert response.status_code == 201
+    assert response.json()["name"] == "Test User"
