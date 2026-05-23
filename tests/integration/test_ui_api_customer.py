@@ -1,4 +1,6 @@
 from utils.api_client import APIClient
+import pytest
+
 pytestmark = pytest.mark.integration
 def test_create_customer_ui_and_verify_api(page):
     # Step 1: create via UI
