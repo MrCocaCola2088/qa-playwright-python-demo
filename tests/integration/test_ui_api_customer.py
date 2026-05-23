@@ -14,7 +14,7 @@ def test_create_customer_ui_and_verify_api(page):
     customer_id = "123"
 
     # Step 3: validate via API
-    client = APIClient(token="fake_token")
+    client = APIClient(token="fake-token")
     response = client.get_customer("tenant-a", customer_id)
 
     assert response.status_code == 200

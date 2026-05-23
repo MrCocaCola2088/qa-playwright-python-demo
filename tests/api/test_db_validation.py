@@ -4,7 +4,7 @@ import pytest
 
 @pytest.mark.skip(reason="Requires real DB")
 def test_customer_persisted_in_db():
-    api = APIClient(token="fake_token")
+    api = APIClient(token="fake-token")
     db = DBClient()
 
     tenant_id = "tenant-a"

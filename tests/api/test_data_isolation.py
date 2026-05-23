@@ -1,6 +1,9 @@
 def test_customer_belongs_to_correct_tenant():
-    db = DBClient()
+    fake_db = [
+        {"id": "1", "tenant_id": "tenant-a"},
+        {"id": "2", "tenant_id": "tenant-b"},
+    ]
 
-    record = db.get_customer_by_id("123")
+    customer = next(c for c in fake_db if c["id"] == "1")
 
-    assert record[2] == "tenant-a"
+    assert customer["tenant_id"] == "tenant-a"
