@@ -1,11 +1,28 @@
-# QA Automation Demo – Playwright + Python
+# QA Automation Strategy Demo – Playwright + Python
 
-This project demonstrates a comprehensive test automation approach for a multi-tenant CRM system using Playwright, Python, and modern testing practices.
+This repository demonstrates how I approach test automation for a complex, multi-tenant CRM platform, similar to financial systems handling customer data, debt flows, and tenant isolation.
+
+The goal is not just to automate tests, but to design a **scalable, maintainable, and risk-based testing strategy**.
+
+---
+
+## 🧠 Testing Philosophy
+
+For systems like CRMs with financial logic and multi-tenancy, I prioritize:
+
+- **API and contract testing** for core business logic
+- **Data integrity validation** at the database level
+- **Tenant isolation validation** (critical in multi-tenant systems)
+- **UI automation only for critical user journeys**
+- **Deterministic CI pipelines using mocks and isolation**
+
+
 
 ## Project Structure
 
 ```
 qa-playwright-python-demo/
+
 ├── README.md
 ├── requirements.txt
 ├── pytest.ini
@@ -38,131 +55,55 @@ qa-playwright-python-demo/
         └── tests.yml
 ```
 
-## Features
+## 🔍 Test Coverage Overview
 
-### UI Automation
-- **Playwright-based** browser automation with Python
-- **Page Object Model** for maintainable and reusable tests
-- Multi-tenant dashboard validation
-- Login flow automation
+### ✅ API Testing
+- Customer creation
+- Tenant-based data isolation
+- Financial logic validation (e.g., debt calculations)
+- Mocked external dependencies for CI stability
 
-### API Testing
-- RESTful API testing with realistic CRM scenarios
-- Multi-tenant customer creation and retrieval
-- Business logic validation (debt calculations)
-- Tenant isolation verification
+### ✅ Contract Testing
+- Schema validation using Pydantic
+- Ensures API responses meet expected structure
+- Prevents breaking changes between services
 
-### Contract Testing
-- **Pydantic schemas** for API response validation
-- Type-safe contract enforcement
-- Early detection of API contract violations
+### ✅ Database Validation
+- Verifies data persistence after API operations
+- Includes mocked DB tests for CI
+- Real DB tests are intentionally skipped in CI
 
-### Database Testing
-- PostgreSQL integration for data persistence verification
-- Multi-tenant data isolation validation
-- End-to-end data integrity checks
+### ✅ Multi-Tenant Testing
+- Ensures strict separation of tenant data
+- Validates access control boundaries
+- Critical for SaaS and financial platforms
 
-### Integration Testing
-- UI + API hybrid workflows
-- Cross-layer validation
-- Real-world CRM scenarios
+### ✅ UI Testing (Playwright)
+- Login flow
+- Tenant dashboard validation
+- Designed using Page Object Model (POM)
 
-### CI/CD
-- GitHub Actions automation
-- Containerized PostgreSQL for consistent test environments
-- Automated test execution on push
-- Scalable parallel test execution
+### ✅ Integration Testing
+- UI + API combined validation
+- Example: Create via UI → Validate via API
 
-## Installation
+---
 
-### Prerequisites
-- Python 3.8+
-- pip
+## ⚙️ CI/CD Strategy (GitHub Actions)
 
-### Setup
+This project is designed with **real-world CI constraints in mind**.
 
-1. Clone the repository
-2. Install dependencies:
+### In CI we:
+
+- ✅ Run **API + contract tests**
+- ✅ Run **mocked DB tests**
+- ❌ Skip UI tests (require browser + environment)
+- ❌ Skip integration tests (depend on full system)
+
+### Command used in CI:
+
 ```bash
-pip install -r requirements.txt
-playwright install
-```
-
-3. Configure environment variables (if needed):
-```bash
-export DB_HOST=localhost
-export DB_USER=postgres
-export DB_PASSWORD=password
-export DB_NAME=crm_db
-```
-
-## Running Tests
-
-### Run all tests
-```bash
-pytest
-```
-
-### Run UI tests only
-```bash
-pytest tests/ui/
-```
-
-### Run API tests only
-```bash
-pytest tests/api/
-```
-
-### Run integration tests only
-```bash
-pytest tests/integration/
-```
-
-### Run with verbose output
-```bash
-pytest -v
-```
-
-### Run with headless browser off (see UI)
-```bash
-pytest tests/ui/ --headed
-```
-
-## Test Coverage
-
-- ✅ **UI Automation**: Login flows, multi-tenant dashboard switching
-- ✅ **API Testing**: Customer CRUD operations, multi-tenant isolation
-- ✅ **Contract Testing**: Pydantic schema validation
-- ✅ **Database Testing**: Data persistence and tenant isolation
-- ✅ **Integration**: UI + API end-to-end flows
-
-## Key Concepts
-
-### Page Object Model
-Pages are abstracted into reusable classes (`pages/login_page.py`, `pages/dashboard_page.py`) for maintainability and clarity.
-
-### Multi-Tenant Architecture
-All tests validate tenant isolation:
-- Data is scoped to specific tenants
-- Cross-tenant access is blocked (403/404 responses)
-- Database queries enforce tenant boundaries
-
-### Fixtures
-Centralized test fixtures (`fixtures/base_fixture.py`) provide consistent browser setup and teardown.
-
-### Test Data
-Reusable test data payloads (`fixtures/test_data.py`) ensure consistency across tests.
-
-## CI/CD Pipeline
-
-GitHub Actions workflow (`.github/workflows/tests.yml`):
-- Runs on every push
-- Spins up PostgreSQL container
-- Installs dependencies and Playwright browsers
-- Executes full test suite
-
-## Real-World Scenarios
-
+pytest -v -m "not ui and not integration"
 This demo covers actual CRM workflows:
 1. **User Login**: Authentication and session management
 2. **Tenant Selection**: Multi-tenant UI navigation
@@ -180,16 +121,4 @@ See `requirements.txt` for the full list. Key dependencies:
 - `pydantic` — Data schema validation
 - `psycopg2-binary` — PostgreSQL driver
 
-## Notes
 
-- Tests use mock/fake tokens for API authentication
-- Database tests require a running PostgreSQL instance
-- UI tests are headless by default (use `--headed` to see browser)
-- All tests support parallel execution via pytest-xdist
-
-## Future Enhancements
-
-- Performance testing with k6
-- Visual regression testing
-- Accessibility testing
-- Load testing for API endpoints
